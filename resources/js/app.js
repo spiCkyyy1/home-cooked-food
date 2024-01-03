@@ -9,6 +9,8 @@ import VueGoogleMaps from '@fawmi/vue-google-maps';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const STRIPE_KEY = import.meta.env.VITE_STRIPE_KEY;
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: name => {
@@ -23,7 +25,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         onBeforeMount(() => {
             const stripeLoaded = ref(false)
-            const stripePromise = loadStripe('pk_test_51O9bMuESojByfVftwNYRV65ig15O717zDRSYGZjuXzJ8vtq6gEyUMcRuVvr3SlPQMk9WmzXq2bhX14uWoOYlSDAh00x5tJeT78')
+            const stripePromise = loadStripe(STRIPE_KEY)
             stripePromise.then(() => {
                 stripeLoaded.value = true
             })
@@ -34,7 +36,7 @@ createInertiaApp({
                 .use(ZiggyVue, Ziggy)
                 .use(VueGoogleMaps, {
                     load: {
-                        key: 'AIzaSyCCSHf9NXjsQ-ghz58mLVnx8KtyrGf5ZIY',
+                        key: GOOGLE_MAPS_API_KEY,
                         libraries: "places"
                     },
                 })
