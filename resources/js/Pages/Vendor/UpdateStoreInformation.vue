@@ -236,9 +236,9 @@ const updateStore = () => {
                     <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
                 </Transition>
             </div>
-            <div v-if="form.longitutde && form.longitutde">
+            <div v-if="form.latitude && form.longitude">
             <GMapMap
-                :center="{ lat: form.latitude, lng: form.longitutde }"
+                :center="{ lat: form.latitude, lng: form.longitude }"
                 :zoom="10"
                 map-type-id="terrain"
                 style="width: 100vw; height: 20rem"
@@ -254,7 +254,7 @@ const updateStore = () => {
                 <!-- Marker to display the searched location -->
                 <GMapMarker
                     :key="markerDetails.id"
-                    :position="{ lat: form.latitude, lng: form.longitutde }"
+                    :position="{ lat: form.latitude, lng: form.longitude }"
                     :draggable="false"
 
                 >

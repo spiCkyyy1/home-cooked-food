@@ -4,7 +4,6 @@ import { Ziggy } from './ziggy';
 import {ZiggyVue} from 'ziggy';
 import Layout from "@/Layouts/Layout.vue";
 import 'flowbite';
-import { StripePlugin } from '@vue-stripe/vue-stripe';
 import VueGoogleMaps from '@fawmi/vue-google-maps';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'

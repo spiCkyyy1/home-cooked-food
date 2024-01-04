@@ -46,8 +46,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+
+    public function menu(): HasOne
+    {
+        return $this->hasOne(Menu::class, 'vendor_id', 'id')->whereStatus('active');
+    }
+
     public function store(): HasOne
     {
-        return $this->hasOne(VendorStore::class);
+        return $this->hasOne(VendorStore::class, 'user_id', 'id');
     }
 }

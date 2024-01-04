@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -53,6 +52,7 @@ Route::group(['middleware' => ['role:Vendor']], function () {
 
 Route::group(['middleware' => ['checkUserRole']], function () {
     Route::get('/', [\App\Http\Controllers\CustomerController::class, 'index'])->name('home');
+    Route::get('/get-menus', [\App\Http\Controllers\CustomerController::class, 'getMenus'])->name('get.menus');
     Route::get('/menu-details/{id}', [\App\Http\Controllers\CustomerController::class, 'showMenu'])->name('show.menu');
     Route::get('/add-to-cart/{productId}/{quantity}', [\App\Http\Controllers\CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/remove-from-cart', [\App\Http\Controllers\CartController::class, 'removeFromCart'])->name('cart.remove');

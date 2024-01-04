@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\VendorStore;
-use App\Models\VendorStoreTiming;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use JustSteveKing\LaravelPostcodes\Service\PostcodeService;

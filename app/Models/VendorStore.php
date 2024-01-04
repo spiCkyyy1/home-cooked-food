@@ -12,6 +12,8 @@ class VendorStore extends Model
 
     protected $fillable = ['user_id', 'name', 'description', 'address','longitude', 'latitude', 'number', 'post_code', 'status'];
 
+
+
     public function timings()
     {
         return $this->hasMany(VendorStoreTiming::class);

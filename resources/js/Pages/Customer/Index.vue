@@ -1,27 +1,28 @@
 <template>
-
-<!--    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">-->
-<!--        <div v-for="menu in menus">-->
-<!--            <div>-->
-<!--                <img class="h-auto max-w-full rounded-lg" :src="getImage(menu.background_image)" alt="">-->
-<!--            </div>-->
-<!--            <div v-for="category in menu.categories">-->
-<!--                <div v-if="category.products.length > 0">-->
-<!--                    <span>Categories: </span>-->
-<!--                    <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{category.name}}</span>-->
-<!--                    <span>Products: </span>-->
-<!--                    <span v-for="product in category.products">{{product.name}}</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-    <div class="bg-white">
+    <div class="container mx-auto px-4 mt-4">
+        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <GMapAutocomplete
+                placeholder="Search for a location"
+                @place_changed="setPlace"
+                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+            </GMapAutocomplete>
+        </div>
+    </div>
+    <div class="bg-white" v-show="menus.data">
         <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
             <h2 class="text-2xl font-bold tracking-tight text-gray-900">Shop by Vendors</h2>
 
             <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                <div class="group relative" v-for="menu in menus">
-                    <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                <div v-for="menu in menus.data" v-show="showStore(menu)">
+                    <div class="group relative">
+                    <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80" v-if="menu.vendor.store">
                         <img :src="getImage(menu.background_image)" alt="Front of men&#039;s Basic Tee in black." class="h-full w-full object-cover object-center lg:h-full lg:w-full">
                     </div>
                     <div class="mt-4 flex justify-between">
@@ -32,10 +33,8 @@
                                     {{ menu.name}}
                                 </a>
                             </h3>
-<!--                            <p class="mt-1 text-sm text-gray-500">Black</p>-->
                         </div>
                         <p class="text-sm font-medium text-gray-900" v-if="menu.description">{{menu.description}}</p>
-<!--                         <p class="text-sm font-medium text-gray-900">{{getProductQuantity(menu.product_sizes)}} : {{getProductPrices(menu.product_prices)}}</p>-->
                     </div>
                     <div class="mt-4 justify-between">
                         <p class="text-sm font-medium text-gray-900" v-if="menu.vendor.name">Store By: {{menu.vendor.name}}</p>
@@ -44,32 +43,78 @@
                           <p class="text-sm font-medium text-gray-900" v-if="menu.vendor.store">Store Address: {{menu.vendor.store.address}}</p>
                     </div>
                 </div>
-
-                <!-- More products... -->
+                </div>
             </div>
         </div>
     </div>
 
 </template>
 <script>
+import axios from "axios";
+import {ref} from "vue";
+
 export default {
-    props: {menus: Object},
+    data(){
+        return {
+            menus: {},
+            baseURL: this.$page.props.baseUrl,
+            lat: '',
+            long: ''
+        }
+    },
     mounted() {
-        console.log(this.menus);
+        this.getmenus();
+        this.getUserLocation();
     },
     methods: {
+        getmenus(){
+            // this.lat !== '' &&
+            if(this.long !== ''){
+                // latitude: this.lat,
+                axios.get(this.baseURL+'/get-menus', {params: { longitude: this.long}})
+                    .then(response => {
+                        if(response.data.success){
+                            this.menus = response.data.success;
+                        }
+                    })
+            }else{
+                axios.get(this.baseURL+'/get-menus')
+                    .then(response => {
+                        if(response.data.success){
+                            this.menus = response.data.success;
+                        }
+                    })
+            }
+
+
+        },
         getImage(imagePath){
             return this.$page.props.storageLink+'/'+imagePath.replace("public", "");
         },
-        getProductNames(names){
-            return names.split(",");
+        setPlace(place){
+            console.log(place);
+            this.lat = place.geometry.location.lat();
+            this.long = place.name;
+            this.getmenus();
         },
-        getProductPrices(prices){
-            return prices.split(",");
+        showStore(menu){
+            console.log(menu);
+            if(menu.vendor.store){
+                return true;
+            }
+            return false;
         },
-        getProductQuantity(quantities){
-            return quantities.split(",");
-        }
+        getUserLocation(){
+            // Check if geolocation is supported by the browser
+            const isSupported = 'navigator' in window && 'geolocation' in navigator
+            if (isSupported) {
+                // Retrieve the user's current position
+                navigator.geolocation.getCurrentPosition((position) => {
+                    coords.value.lat = position.coords.latitude
+                    coords.value.lng = position.coords.longitude
+                })
+            }
+        },
     }
 };
 </script>

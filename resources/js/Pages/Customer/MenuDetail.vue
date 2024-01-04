@@ -129,9 +129,7 @@
                         <h2 class="text-4xl text-green-600">Welcome</h2>
                         <!-- </h1> -->
                         <p class="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus nemo incidunt praesentium, ipsum
-                            culpa minus eveniet, id nesciunt excepturi sit voluptate repudiandae. Explicabo, incidunt quia.
-                            Repellendus mollitia quaerat est voluptas!
+                            {{menu.description}}
                         </p>
                         <div class="relative flex">
                             <a href="#_"
@@ -148,7 +146,50 @@
                 </div>
                 <div class="w-full md:w-1/2">
                     <div class="w-full h-auto overflow-hidden rounded-md shadow-xl sm:rounded-xl">
-                        <img src="https://cdn.pixabay.com/photo/2017/08/03/13/30/people-2576336_960_720.jpg" />
+                        <div v-if="menu.vendor.store.latitude && menu.vendor.store.longitude">
+                            <GMapMap
+                                :center="{ lat: menu.vendor.store.latitude, lng: menu.vendor.store.longitude }"
+                                :zoom="15"
+                                map-type-id="terrain"
+                                style="width: 100vw; height: 20rem"
+                                :options="{
+                zoomControl: true,
+                mapTypeControl: true,
+                scaleControl: true,
+                streetViewControl: true,
+                rotateControl: true,
+                fullscreenControl: true
+                }"
+                            >
+                                <!-- Marker to display the searched location -->
+                                <GMapMarker
+                                    :key="markerDetails.id"
+                                    :position="{ lat: menu.vendor.store.latitude, lng: menu.vendor.store.longitude }"
+                                    :draggable="false"
+
+                                >
+                                    <!-- InfoWindow to display the searched location details -->
+                                    <GMapInfoWindow
+                                        v-if="menu.vendor.store.address !== ''"
+                                        :opened="openedMarkerID === markerDetails.id"
+                                        :options="{
+              pixelOffset: {
+                width: 10,
+                height: 0
+              },
+              maxWidth: 320,
+              maxHeight: 320
+            }"
+
+                                    >
+                                        <div class="location-details">
+                                            <p> Added Info </p>
+                                        </div>
+                                    </GMapInfoWindow>
+                                </GMapMarker>
+                            </GMapMap>
+                        </div>
+<!--                        <img src="https://cdn.pixabay.com/photo/2017/08/03/13/30/people-2576336_960_720.jpg" />-->
                     </div>
                 </div>
             </div>
@@ -293,6 +334,8 @@
     </section>
 </template>
 <script>
+import {ref} from "vue";
+
 export default {
     props: {menu: Object},
     mounted() {
@@ -301,6 +344,11 @@ export default {
     data(){
         return {
             baseURL: this.$page.props.baseUrl,
+            coords : ref({ lat: 51.5072, lng: 0.1276 }),
+            markerDetails : ref({
+                id: 1,
+                position: this.coords
+            })
         }
     },
     methods: {
