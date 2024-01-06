@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -32,5 +33,25 @@ class CustomerController extends Controller
         return Inertia::render('Customer/MenuDetail', [
             'menu' => $menu,
         ]);
+    }
+
+    public function getRating(Request $request)
+    {
+        $rating = Rating::whereUserId(auth()->user()->id)->whereMenuId($request->menuId)->first();
+        return response()->json(['success' => $rating]);
+
+    }
+    public function markRating(Request $request){
+        Rating::updateOrCreate(
+            [
+                'user_id' => auth()->user()->id,
+            ],
+            [
+                'menu_id' => $request->menuId,
+                'user_id' => auth()->user()->id,
+                'star_rating' => $request->rating,
+                'status' => 'active',
+        ]);
+        return response()->json(['success' => 'Rating Saved.']);
     }
 }

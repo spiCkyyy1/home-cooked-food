@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Menu extends Model
@@ -16,7 +18,7 @@ class Menu extends Model
 
     protected $with = ['categories'];
 
-    public $appends = ['category_name', 'product_names', 'product_prices', 'product_sizes'];
+    public $appends = ['category_name', 'product_names', 'product_prices', 'product_sizes', 'rating'];
 
     protected function getCategoryNameAttribute()
     {
@@ -88,6 +90,13 @@ class Menu extends Model
         return null;
     }
 
+    protected function getRatingAttribute(){
+        if($this->rating()->exists()){
+            return round($this->rating()->avg('star_rating'));
+        }
+        return 0;
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_menu', 'menu_id', 'category_id')->with('products.details');
@@ -96,5 +105,9 @@ class Menu extends Model
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'vendor_id', 'id');
+    }
+
+    public function rating(): HasMany{
+        return $this->hasMany(Rating::class, 'menu_id', 'id');
     }
 }

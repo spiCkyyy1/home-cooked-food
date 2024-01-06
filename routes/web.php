@@ -53,9 +53,11 @@ Route::group(['middleware' => ['role:Vendor']], function () {
 Route::group(['middleware' => ['checkUserRole']], function () {
     Route::get('/', [\App\Http\Controllers\CustomerController::class, 'index'])->name('home');
     Route::get('/get-menus', [\App\Http\Controllers\CustomerController::class, 'getMenus'])->name('get.menus');
+    Route::get('/get-rating', [\App\Http\Controllers\CustomerController::class, 'getRating'])->name('get.rating');
     Route::get('/menu-details/{id}', [\App\Http\Controllers\CustomerController::class, 'showMenu'])->name('show.menu');
     Route::get('/add-to-cart/{productId}/{quantity}', [\App\Http\Controllers\CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/remove-from-cart', [\App\Http\Controllers\CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/mark-rating', [\App\Http\Controllers\CustomerController::class, 'markRating'])->name('mark.rating');
     Route::get('/cart', [\App\Http\Controllers\CartController::class, 'showCart'])->name('cart.show');
     Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'checkout'])->name('checkout');
     Route::post('/session', [\App\Http\Controllers\CheckoutController::class, 'getSession'])->name('session.get');

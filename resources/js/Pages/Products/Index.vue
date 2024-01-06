@@ -250,7 +250,7 @@
                                @click="getProducts(pagination.url)"
                                :class="{ 'bg-red-700 text-white':  pagination.active, 'disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none disabled:pointer-events-none disabled:cursor-default disabled:opacity-75': pagination.url == null }"
                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight
-                               text-gray-500 bg-white border border-gray-300
+                                border border-gray-300
                                dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700
                                dark:hover:text-white" v-html="pagination.label"></a>
                         </li>
