@@ -45,6 +45,7 @@ class CustomerController extends Controller
         Rating::updateOrCreate(
             [
                 'user_id' => auth()->user()->id,
+                'menu_id' => $request->menuId,
             ],
             [
                 'menu_id' => $request->menuId,

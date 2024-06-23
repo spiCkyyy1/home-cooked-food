@@ -39,7 +39,7 @@
                         <div class="flex space-x-4">
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                             <NavLink v-if="checkIfVerified && checkIfAdmin" :href="$route('dashboard')" :active="$page.component === 'Dashboard'" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Dashboard</NavLink>
-                            <NavLink v-if="checkIfVendor && checkIfVerified" :href="$route('users')" :active="$page.component === 'Users/Index'" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Home</NavLink>
+<!--                            <NavLink v-if="checkIfVendor && checkIfVerified" :href="$route('users')" :active="$page.component === 'Users/Index'" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Home</NavLink>-->
                             <NavLink v-if="checkIfVendor && checkIfVerified" :href="$route('menu')" :active="$page.component === 'Menu/Index'" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Menu</NavLink>
                             <NavLink v-if="checkIfVendor && checkIfVerified" :href="$route('categories')" :active="$page.component === 'Category/Index'" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Category</NavLink>
                             <NavLink v-if="checkIfVendor && checkIfVerified" :href="$route('products')" :active="$page.component === 'Products/Index'" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Products</NavLink>

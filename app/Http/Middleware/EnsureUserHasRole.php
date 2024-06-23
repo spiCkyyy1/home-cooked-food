@@ -26,7 +26,7 @@ class EnsureUserHasRole
                 return redirect()->route('profile.edit');
             }
 
-            return redirect()->route('users');
+            return redirect()->route('menu');
         }
         if ($request->user()->hasRole('Customer')) {
             return $next($request);
